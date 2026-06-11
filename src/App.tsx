@@ -2,7 +2,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import About from "./pages/About";
+
 import Quickstart from "./pages/Quickstart";
 import Blog from "./pages/Blog";
 
@@ -15,7 +15,6 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quickstart" element={<Quickstart />} />
-            <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
           </Routes>
         </main>

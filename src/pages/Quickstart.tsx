@@ -239,6 +239,12 @@ def add_element(
         <li><strong>Three-round retry</strong> &mdash; the parent sub-agent retries up to 3 rounds. If the agent reports <Code>IMPOSSIBLE</Code>, the parent validates the reasoning.</li>
         <li><strong>Python API over CLI</strong> &mdash; LLMs should use <Code>verify_and_convert()</Code> and <Code>compile_veri()</Code> directly rather than shell commands.</li>
       </ul>
+
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+        Learn more at{" "}
+        <a href="https://github.com/veri-md/veri-build" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">github.com/veri-md/veri-build</a>
+        {" "}&mdash; the repo README has the full reference.
+      </p>
     </div>
   );
 }

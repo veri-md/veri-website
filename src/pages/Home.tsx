@@ -152,29 +152,9 @@ export default function Home() {
         </h2>
 
         <h3 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 mb-5 text-center uppercase tracking-wider text-sm">
-          Advisors
-        </h3>
-        <div className="flex flex-wrap justify-center gap-8 mb-12">
-          {[
-            { name: "Mohsen Lesan", role: "Advisor", photo: null },
-            { name: "Matei Zaharia", role: "Advisor", photo: null },
-            { name: "Scott Shenker", role: "Advisor", photo: null },
-          ].map((person) => (
-            <div key={person.name} className="flex flex-col items-center gap-2 w-32">
-              <div className="size-24 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 ring-2 ring-neutral-200 dark:ring-neutral-700 flex items-center justify-center">
-                <span className="text-2xl font-bold text-neutral-400 dark:text-neutral-500">
-                  {person.name.split(' ').map(n => n[0]).join('')}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-neutral-900 dark:text-white text-center">{person.name}</span>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 mb-5 text-center uppercase tracking-wider text-sm">
           Students
         </h3>
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-8 mb-12">
           {[
             { name: "Dev Bali", role: "Student", photo: null },
             { name: "Ziming Mao", role: "Student", photo: "/people/ziming_mao.jpeg" },
@@ -195,6 +175,26 @@ export default function Home() {
                     </span>
                   </div>
                 )}
+              </div>
+              <span className="text-sm font-medium text-neutral-900 dark:text-white text-center">{person.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 mb-5 text-center uppercase tracking-wider text-sm">
+          Advisors
+        </h3>
+        <div className="flex flex-wrap justify-center gap-8">
+          {[
+            { name: "Mohsen Lesan", role: "Advisor", photo: null },
+            { name: "Matei Zaharia", role: "Advisor", photo: null },
+            { name: "Scott Shenker", role: "Advisor", photo: null },
+          ].map((person) => (
+            <div key={person.name} className="flex flex-col items-center gap-2 w-32">
+              <div className="size-24 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 ring-2 ring-neutral-200 dark:ring-neutral-700 flex items-center justify-center">
+                <span className="text-2xl font-bold text-neutral-400 dark:text-neutral-500">
+                  {person.name.split(' ').map(n => n[0]).join('')}
+                </span>
               </div>
               <span className="text-sm font-medium text-neutral-900 dark:text-white text-center">{person.name}</span>
             </div>
