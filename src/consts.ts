@@ -7,12 +7,12 @@ export const HeaderLinks = [
 ];
 
 export const FooterLinks = [
-  { href: "https://github.com/devbali/veri-build", title: "GitHub" },
+  { href: "https://github.com/veri-md/veri-build", title: "GitHub" },
 ];
 
 export const SocialLinks = [
   {
-    href: "https://github.com/devbali/veri-build",
+    href: "https://github.com/veri-md/veri-build",
     label: "GitHub",
   },
 ];

@@ -169,12 +169,12 @@ def add_element(
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
         This project is open source on GitHub. Check it out at{" "}
         <a
-          href="https://github.com/devbali/veri-build"
+          href="https://github.com/veri-md/veri-build"
           target="_blank"
           rel="noopener noreferrer"
           className="font-medium text-blue-600 hover:text-blue-800 underline dark:text-blue-400 dark:hover:text-blue-300"
         >
-          github.com/devbali/veri-build
+          github.com/veri-md/veri-build
         </a>.
       </p>
     </div>
