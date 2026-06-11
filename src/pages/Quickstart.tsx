@@ -159,55 +159,33 @@ def add_element(
         </tbody>
       </Table>
 
-      {/* CLI Usage */}
-      <SectionTitle id="cli">CLI Usage</SectionTitle>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        Once the spec is written, lint it to check the interface:
-      </p>
-      <Pre><span className="text-green-700 dark:text-green-400">$</span> python3 -m veri_build.pipeline lint sorted_list.veri.md --target fstar</Pre>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4 mb-3">
-        Expected output:
-      </p>
-      <Pre className="text-xs">✅ sorted_list.veri.md: lint passed (fstar-c)</Pre>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4 mb-3">
-        Compile with an LLM agent in Docker to fill <Code>#TODO</Code> blocks:
-      </p>
-      <Pre><span className="text-green-700 dark:text-green-400">$</span> python3 -m veri_build.pipeline compile sorted_list.veri.md --agent claude -o build/</Pre>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4 mb-3">
-        Or convert existing F* to Veri DSL:
-      </p>
-      <Pre><span className="text-green-700 dark:text-green-400">$</span> python3 -m veri_build.pipeline convert path/to/fstar_code.fst</Pre>
-
-      {/* Python API Usage */}
-      <SectionTitle id="api">Python API Usage</SectionTitle>
+      {/* Pipeline APIs */}
+      <SectionTitle id="api">Pipeline APIs</SectionTitle>
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
-        The primary workflow is <strong>verify+convert</strong>: write
-        F*/Dafny in a temp file, verify it, and convert to user-facing Veri DSL:
+        The pipeline provides two APIs that your LLM uses on your behalf.
+        You don&apos;t need to run these yourself &mdash; just tell your LLM
+        to use them.
       </p>
-      <Pre>{`from veri_build.pipeline import verify_and_convert
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800">
+          <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">Lint API</h3>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Checks that a <Code>.veri.md</Code> spec is valid &mdash; parses Veri DSL
+            blocks, generates the target interface, and runs the verifier. Every spec
+            must pass lint before it&apos;s shown to you.
+          </p>
+        </div>
+        <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800">
+          <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">Compile API</h3>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            End-to-end: reads a <Code>.veri.md</Code>, launches an LLM agent in
+            a Docker sandbox to fill implementations, verifies, and emits the
+            target output (<Code>.c</Code>, <Code>.rs</Code>, <Code>.py</Code>, etc.).
+          </p>
+        </div>
+      </div>
 
-# Write F* code in a temp .veri.f.md file, then:
-result = verify_and_convert(
-    fstar_code,
-    target='fstar',
-    module_name='SortedList',
-)
 
-if result.verified:
-    # result.veri is a Veri DSL spec ready for the user
-    with open("sorted_list.veri.md", "w") as f:
-        f.write(result.veri)
-else:
-    print(result.error)  # fix the F* and retry`}</Pre>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4 mb-3">
-        For the full end-to-end compile (long-running &mdash; always spawn in a sub-agent):
-      </p>
-      <Pre>{`from veri_build.pipeline import compile_veri, CompilerConfig
-
-result = compile_veri(
-    "sorted_list.veri.md",
-    CompilerConfig(agent='claude', use_docker=True),
-)`}</Pre>
 
       {/* Using with an LLM */}
       <SectionTitle id="llm-usage">Using with an LLM</SectionTitle>
