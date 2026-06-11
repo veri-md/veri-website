@@ -2,8 +2,8 @@ export const SITE_TITLE = "Veri Build";
 export const SITE_DESCRIPTION = "Formal Verification Pipeline — Write specs in Veri DSL, compile to verified code.";
 
 export const HeaderLinks = [
-  { href: "/", title: "About" },
-  // { href: "/blog", title: "Blog" },  // coming later
+  { href: "/", title: "Home" },
+  { href: "/about", title: "About" },
 ];
 
 export const FooterLinks = [
