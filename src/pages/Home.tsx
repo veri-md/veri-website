@@ -186,7 +186,7 @@ export default function Home() {
         </h3>
         <div className="flex flex-wrap justify-center gap-8">
           {[
-            { name: "Mohsen Lesan", role: "Advisor", photo: null },
+            { name: "Mohsen Lesani", role: "Advisor", photo: null },
             { name: "Matei Zaharia", role: "Advisor", photo: null },
             { name: "Scott Shenker", role: "Advisor", photo: null },
           ].map((person) => (
