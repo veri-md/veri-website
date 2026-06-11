@@ -17,9 +17,6 @@ export default function Quickstart() {
 
       {/* Pipeline */}
       <SectionTitle id="pipeline">Pipeline Overview</SectionTitle>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        The pipeline has three stages:
-      </p>
       <div className="grid md:grid-cols-3 gap-4 mb-8">
         {[
           {
@@ -121,14 +118,14 @@ def add_element(
         <li><Code>type valid_sorted_list</Code> &mdash; a refined type: <Code>list[Element]</Code> constrained by <Code>WHERE is_sorted(lst)</Code></li>
         <li><Code>add_element</Code> &mdash; a function with <Code>REQUIRES</Code>/<Code>ENSURES</Code> contract and <Code>#TODO</Code> marker</li>
         <li>Natural language prose surrounds each Veri DSL block &mdash; the file is documentation <em>and</em> a spec</li>
+        <li>All functions and types are <strong>pure</strong> &mdash; no side effects, no mutable state, no I/O inside contracts. The LLM enforces this.</li>
       </ul>
 
       {/* Backend Targets */}
       <SectionTitle id="targets">Backend Targets</SectionTitle>
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
         The same Veri DSL spec can compile to different outputs by changing the
-        <Code>TARGET</Code> declaration. The pipeline&apos;s plugin backend registry
-        currently supports:
+        <Code>TARGET</Code> declaration:
       </p>
 
       <Table>
@@ -159,120 +156,89 @@ def add_element(
         </tbody>
       </Table>
 
-      {/* Pipeline APIs */}
-      <SectionTitle id="api">Pipeline APIs</SectionTitle>
+      {/* Core loop */}
+      <SectionTitle id="core-loop">Core Loop</SectionTitle>
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
-        The pipeline provides two APIs that your LLM uses on your behalf.
-        You don&apos;t need to run these yourself &mdash; just tell your LLM
-        to use them.
+        The pipeline follows a strict iterative loop. Your LLM handles every
+        step &mdash; you just provide the spec and tell it when to lint or compile.
       </p>
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800">
-          <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">Lint API</h3>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            Checks that a <Code>.veri.md</Code> spec is valid &mdash; parses Veri DSL
-            blocks, generates the target interface, and runs the verifier. Every spec
-            must pass lint before it&apos;s shown to you.
-          </p>
-        </div>
-        <div className="rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-800">
-          <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">Compile API</h3>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            End-to-end: reads a <Code>.veri.md</Code>, launches an LLM agent in
-            a Docker sandbox to fill implementations, verifies, and emits the
-            target output (<Code>.c</Code>, <Code>.rs</Code>, <Code>.py</Code>, etc.).
-          </p>
-        </div>
-      </div>
+      <ol className="space-y-3 text-neutral-700 dark:text-neutral-300 leading-relaxed list-decimal list-inside mb-6">
+        <li>
+          <strong>Write the spec</strong> &mdash; Your LLM writes F*/Dafny in a temp
+          file, calls <Code>verify_and_convert()</Code> to verify and convert it to
+          Veri DSL, then runs <Code>lint</Code>.
+        </li>
+        <li>
+          <strong>Iterate</strong> &mdash; You review the spec and suggest changes.
+          Every time the LLM shows you a revised <Code>.veri.md</Code>, it must
+          have passed <Code>lint</Code> first. If lint fails, the LLM fixes the
+          errors and re-lints before showing it to you.
+        </li>
+        <li>
+          <strong>Compile</strong> &mdash; When the spec is finalized, the LLM calls
+          <Code>compile_veri()</Code> to produce verified output
+          (<Code>.c</Code>, <Code>.rs</Code>, <Code>.py</Code>, etc.).
+          Compilation can take hours &mdash; it runs as a sub-agent with an LLM
+          inside a Docker sandbox filling implementations, running verifiers,
+          and retrying on failure.
+        </li>
+      </ol>
 
+      {/* Lint API */}
+      <SectionTitle id="lint-api">Lint API</SectionTitle>
+      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
+        The LLM calls <Code>lint</Code> on every <Code>.veri.md</Code> before
+        showing it to you. It validates the spec end-to-end:
+        parses Veri DSL blocks, generates the target-language interface, runs
+        fstar.exe or dafny to confirm consistency, and rejects unimplemented
+        functions. <strong>If lint fails, the spec is broken</strong> &mdash;
+        the LLM must fix it before you see it.
+      </p>
 
+      {/* Compile API */}
+      <SectionTitle id="compile-api">Compile API</SectionTitle>
+      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
+        When the spec is finalized, the LLM calls <Code>compile_veri()</Code>.
+        This is a long-running pipeline (minutes to hours):
+      </p>
+      <ol className="space-y-2 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed list-decimal list-inside">
+        <li>Reads the <Code>.veri.md</Code>, extracts Veri DSL blocks, builds an AST</li>
+        <li>Generates the target-language interface (F* <Code>.fsti</Code> or Dafny <Code>.dfy</Code> header)</li>
+        <li>Launches an LLM agent inside a Docker sandbox with credentials mounted</li>
+        <li>The agent fills <Code>#TODO</Code> blocks with target-language implementations</li>
+        <li>The agent runs self-check: verifies with fstar.exe / dafny, then extracts to output</li>
+        <li>If verification fails, the agent retries up to 3 rounds with function-count feedback</li>
+        <li>On success, produces the output artifacts (<Code>.c</Code>, <Code>.rs</Code>, etc.)</li>
+      </ol>
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3">
+        The LLM should always spawn compile as a sub-agent &mdash; it shouldn&apos;t
+        block your conversation.
+      </p>
 
       {/* Using with an LLM */}
       <SectionTitle id="llm-usage">Using with an LLM</SectionTitle>
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-4">
-        The pipeline is designed to be driven by an LLM agent. The repo includes
-        a skill file that tells the LLM exactly how to use it. Here&apos;s what
-        you need to know:
+        The pipeline is designed to be driven by an LLM agent. We&apos;ve tested
+        this on <strong>OpenClaw</strong> and <strong>Claude Code</strong>
+        harnesses &mdash; both work with the skill file.
       </p>
 
       <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">1. Load the skill</h3>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        The skill is at <Code>veri-build/skills/VERIFICATION-SKILL.md</Code>. Tell
-        your LLM to read it. It contains the full instruction set for using the
-        pipeline:
-      </p>
-      <Pre className="text-xs"># Tell your LLM:
-Please read /path/to/veri-build/skills/VERIFICATION-SKILL.md
-# This defines the core loop, pure discipline rules,
-# parent-subagent protocol, and lint-before-deliver rule.</Pre>
-
-      <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">2. Follow the core loop</h3>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        The skill defines a strict workflow. Summarized:
-      </p>
-      <ol className="space-y-2 text-neutral-700 dark:text-neutral-300 leading-relaxed list-decimal list-inside">
-        <li><strong>Write in F*/Dafny first</strong> &mdash; work in a temp <Code>.veri.f.md</Code> or <Code>.veri.dfy.md</Code> file. All targets produce pure functions and pure types.</li>
-        <li><strong>Call <Code>verify_and_convert()</Code></strong> &mdash; this checks the code with fstar.exe / dafny and converts it to Veri DSL if verification passes.</li>
-        <li><strong>Lint before delivering</strong> &mdash; <em>never</em> show a <Code>.veri.md</Code> to a user without running it through <Code>lint</Code> first.</li>
-        <li><strong>For compile</strong> &mdash; if the user needs the spec compiled to C/Rust/Python, use <Code>compile_veri()</Code> in a <em>spawned sub-agent</em> (it takes minutes, not seconds).</li>
-      </ol>
-
-      <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">3. Pure discipline (all targets)</h3>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        Every Veri DSL spec must be pure. The skill enforces:
-      </p>
-      <ul className="space-y-1 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed list-disc list-inside mb-3">
-        <li>Functions are <strong>pure</strong> (<Code>Pure</Code>/<Code>Tot</Code>/<Code>Lemma</Code> in F*, <Code>function</Code>/<Code>predicate</Code> in Dafny). No mutable effects.</li>
-        <li>Types are <strong>pure</strong> &mdash; no heap objects, no ST regions.</li>
-        <li>Python target: contract conditions are pure, but the implementation function can have side effects.</li>
-        <li>F* → C additionally enforces the <strong>Low* subset</strong> for KaRaMeL compatibility.</li>
-        <li>Dafny → Rust allows only <Code>function</Code>/<Code>predicate</Code>/<Code>lemma</Code> &mdash; no mutable <Code>method</Code>.</li>
-      </ul>
-
-      <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">4. Best results</h3>
-      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mb-3">
-        For best results when using an LLM with this pipeline:
-      </p>
-      <ul className="space-y-2 text-neutral-700 dark:text-neutral-300 leading-relaxed list-disc list-inside">
-        <li><strong>Stick to the skill</strong> &mdash; the VERIFICATION-SKILL.md has hard rules (lint before deliver, parent-subagent retry protocol, signal codes). Make sure the LLM follows them.</li>
-        <li><strong>Use sub-agents for compile</strong> &mdash; <Code>compile_veri</Code> with <Code>use_docker=True</Code> builds images, runs agents, and verifies. This is a long-running task &mdash; always spawn it as a sub-agent, never block the main session.</li>
-        <li><strong>Lint is a hard gate</strong> &mdash; if lint fails, the LLM must fix the parse errors before showing the spec to anyone. A spec that doesn&apos;t lint is broken.</li>
-        <li><strong>Three-round retry</strong> &mdash; the parent sub-agent retries up to 3 rounds with function-count feedback. If the agent reports <Code>IMPOSSIBLE</Code>, the parent validates the reasoning and decides whether to stop or re-prompt.</li>
-        <li><strong>Python API over CLI</strong> &mdash; LLMs should use <Code>verify_and_convert()</Code> and <Code>compile_veri()</Code> directly rather than shelling out to the CLI. The API returns structured results, making it easier to handle errors.</li>
-      </ul>
-
-      <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">5. Quick reference</h3>
-      <Table>
-        <thead>
-          <tr className="border-b border-neutral-300 dark:border-neutral-600">
-            <th className="py-2 pr-4 text-left font-semibold text-neutral-700 dark:text-neutral-300">Task</th>
-            <th className="py-2 text-left font-semibold text-neutral-700 dark:text-neutral-300">What to tell the LLM</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-          {[
-            ["New spec from scratch", "Write F* in a temp .veri.f.md, call verify_and_convert(), then lint before showing me the .veri.md"],
-            ["Compile to C/Rust", "Read skills/VERIFICATION-SKILL.md, then call compile_veri() in a spawned sub-agent with Config(agent='claude', use_docker=True)"],
-            ["Convert existing F*/Dafny", "Call verify_and_convert(code, target='fstar'|'dafny', module_name='...') and lint the result before showing it"],
-            ["Fix a spec", "Get the skill, write the target code correctly, verify_and_convert(), lint &mdash; never patch Veri DSL directly"],
-          ].map(([task, instruction]) => (
-            <tr key={task as string}>
-              <td className="py-2 pr-4 font-medium text-neutral-800 dark:text-neutral-200 text-sm">{task as string}</td>
-              <td className="py-2 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">{instruction as string}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      {/* Contributors */}
-      <SectionTitle id="contributors">Contributors</SectionTitle>
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-        Veri Build is developed and maintained by{" "}
-        <a href="https://github.com/devbali" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">@devbali</a>{" "}
-        and the Veri DSL community.
-        Contributions, issues, and feature requests are welcome on{" "}
-        <a href="https://github.com/veri-md/veri-build" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">GitHub</a>.
+        Tell your LLM: <Code>get the skills from https://github.com/veri-md/veri-build</Code>.
+        The skill file at <Code>skills/VERIFICATION-SKILL.md</Code> contains the full
+        instruction set &mdash; the core loop, pure discipline rules, parent-subagent
+        protocol, and lint-before-deliver rule.
       </p>
+
+      <h3 className="mt-6 mb-2 text-lg font-semibold text-neutral-800 dark:text-neutral-200">2. Best results</h3>
+      <ul className="space-y-2 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed list-disc list-inside">
+        <li><strong>Stick to the skill</strong> &mdash; the skill has hard rules (lint before deliver, parent-subagent retry protocol, signal codes). Make sure the LLM follows them.</li>
+        <li><strong>Use sub-agents for compile</strong> &mdash; <Code>compile_veri</Code> with <Code>use_docker=True</Code> builds images, runs agents, and verifies. This is a long-running task &mdash; always spawn it as a sub-agent.</li>
+        <li><strong>Lint is a hard gate</strong> &mdash; if lint fails, the LLM must fix the errors before showing you anything.</li>
+        <li><strong>Three-round retry</strong> &mdash; the parent sub-agent retries up to 3 rounds. If the agent reports <Code>IMPOSSIBLE</Code>, the parent validates the reasoning.</li>
+        <li><strong>Python API over CLI</strong> &mdash; LLMs should use <Code>verify_and_convert()</Code> and <Code>compile_veri()</Code> directly rather than shell commands.</li>
+      </ul>
     </div>
   );
 }

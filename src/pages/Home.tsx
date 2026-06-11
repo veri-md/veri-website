@@ -145,17 +145,65 @@ export default function Home() {
         </ul>
       </section>
 
-      {/* Contributors */}
-      <section className="py-8 border-t border-neutral-200 dark:border-neutral-700">
-        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-3">
-          Contributors
+      {/* Team */}
+      <section className="py-12 border-t border-neutral-200 dark:border-neutral-700">
+        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-8 text-center">
+          Team
         </h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-          Developed by{" "}
-          <a href="https://github.com/devbali" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">@devbali</a>
-          {" "}and the Veri DSL community.
+
+        <h3 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 mb-5 text-center uppercase tracking-wider text-sm">
+          Advisors
+        </h3>
+        <div className="flex flex-wrap justify-center gap-8 mb-12">
+          {[
+            { name: "Mohsen Lesan", role: "Advisor", photo: null },
+            { name: "Matei Zaharia", role: "Advisor", photo: null },
+            { name: "Scott Shenker", role: "Advisor", photo: null },
+          ].map((person) => (
+            <div key={person.name} className="flex flex-col items-center gap-2 w-32">
+              <div className="size-24 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 ring-2 ring-neutral-200 dark:ring-neutral-700 flex items-center justify-center">
+                <span className="text-2xl font-bold text-neutral-400 dark:text-neutral-500">
+                  {person.name.split(' ').map(n => n[0]).join('')}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-neutral-900 dark:text-white text-center">{person.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="text-lg font-semibold text-neutral-500 dark:text-neutral-400 mb-5 text-center uppercase tracking-wider text-sm">
+          Students
+        </h3>
+        <div className="flex flex-wrap justify-center gap-8">
+          {[
+            { name: "Dev Bali", role: "Student", photo: null },
+            { name: "Ziming Mao", role: "Student", photo: "/people/ziming_mao.jpeg" },
+            { name: "Jamie K", role: "Student", photo: null },
+          ].map((person) => (
+            <div key={person.name} className="flex flex-col items-center gap-2 w-32">
+              <div className="size-24 rounded-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 ring-2 ring-neutral-200 dark:ring-neutral-700">
+                {person.photo ? (
+                  <img
+                    src={person.photo}
+                    alt={person.name}
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <div className="size-full flex items-center justify-center">
+                    <span className="text-2xl font-bold text-neutral-400 dark:text-neutral-500">
+                      {person.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <span className="text-sm font-medium text-neutral-900 dark:text-white text-center">{person.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-xs text-neutral-400 dark:text-neutral-500 text-center mt-8">
           Open source at{" "}
-          <a href="https://github.com/veri-md/veri-build" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">github.com/veri-md/veri-build</a>.
+          <a href="https://github.com/veri-md/veri-build" className="text-blue-600 underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">github.com/veri-md/veri-build</a>
         </p>
       </section>
     </div>
