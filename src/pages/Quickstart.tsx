@@ -56,32 +56,53 @@ export default function Quickstart() {
         blocks. The first Veri DSL block must declare the target backend:
       </p>
 
-      <Pre>{`# Sorted List Specification
+      {/* Rendered markdown preview */}
+      <div className="border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 p-6 md:p-8 my-6 space-y-5">
+        {/* Title */}
+        <h3 className="text-2xl font-bold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700 pb-3">
+          Sorted List Specification
+        </h3>
 
-Target: F* → C via Low*/KaRaMeL
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+          Target: F* &rarr; C via Low*/KaRaMeL
+        </p>
 
-\`\`\`veri
-TARGET fstar-c
-\`\`\`
+        {/* First code block */}
+        <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
+          <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
+            <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
+          </div>
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">TARGET fstar-c</pre>
+        </div>
 
-## Element Type
+        {/* Section: Element Type */}
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Element Type</h4>
+        <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+          Each element has a numeric serial number and a string data field.
+        </p>
 
-Each element has a numeric serial number and a string data field.
-
-\`\`\`veri
-class Element:
+        <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
+          <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
+            <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
+          </div>
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`class Element:
     serial: nat
-    data:   string
-\`\`\`
+    data:   string`}</pre>
+        </div>
 
-## Sorted List Type
+        {/* Section: Sorted List Type */}
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Sorted List Type</h4>
+        <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+          A sorted list is a list of elements with an invariant that enforces ordering
+          by serial number. The predicate <Code>is_sorted</Code> recursively checks that every
+          adjacent pair is in non-decreasing order:
+        </p>
 
-A sorted list is a list of elements with an invariant that enforces ordering
-by serial number. The predicate \`is_sorted\` recursively checks that every
-adjacent pair is in non-decreasing order:
-
-\`\`\`veri
-def is_sorted(lst: list[Element]) -> bool:
+        <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
+          <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
+            <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
+          </div>
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
         case [_]: True
@@ -89,16 +110,21 @@ def is_sorted(lst: list[Element]) -> bool:
             hd1.serial <= hd2.serial
             and is_sorted([hd2] + tl)
 
-type valid_sorted_list = list[Element] WHERE is_sorted(lst)
-\`\`\`
+type valid_sorted_list = list[Element] WHERE is_sorted(lst)`}</pre>
+        </div>
 
-## Adding an Element
+        {/* Section: Adding an Element */}
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Adding an Element</h4>
+        <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+          Insert a new element while preserving the invariant. The ENSURES clause
+          guarantees the result is sorted and has exactly one more element:
+        </p>
 
-Insert a new element while preserving the invariant. The ENSURES clause
-guarantees the result is sorted and has exactly one more element:
-
-\`\`\`veri
-def add_element(
+        <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
+          <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
+            <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
+          </div>
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`def add_element(
     existing: valid_sorted_list,
     new_elem: Element,
 ) -> valid_sorted_list:
@@ -106,8 +132,9 @@ def add_element(
     ENSURES (is_sorted(result)
              and len(result) == len(existing) + 1)
 
-#TODO
-\`\`\``}</Pre>
+#TODO`}</pre>
+        </div>
+      </div>
 
       <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed mt-4">
         Things to notice:
