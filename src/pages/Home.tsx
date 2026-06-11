@@ -95,8 +95,13 @@ export default function Home() {
         </h2>
         <ul className="space-y-3">
           {[
-            ["f-star-c", "F* → Low* → KaRaMeL → C", "Verified C for embedded / WASM"],
+            ["fstar-c", "F* → Low* → KaRaMeL → C", "Verified C for embedded / WASM"],
+            ["fstar-ocaml", "F* → fstar --codegen OCaml", "Verified OCaml"],
+            ["fstar-wasm", "F* → krml -wasm", "WebAssembly"],
             ["dafny-rust", "Dafny → Rust", "Verified Rust crates"],
+            ["dafny-java", "Dafny → Java", "Verified Java"],
+            ["dafny-python", "Dafny → Python", "Verified Python"],
+            ["dafny-js", "Dafny → JavaScript", "Verified JS"],
             ["python-assert", "Python @contract", "Runtime enforcement in Python"],
           ].map(([target, toolchain, use]) => (
             <li key={target as string}
