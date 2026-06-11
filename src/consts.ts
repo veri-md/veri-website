@@ -3,7 +3,9 @@ export const SITE_DESCRIPTION = "Formal Verification Pipeline — Write specs in
 
 export const HeaderLinks = [
   { href: "/", title: "Home" },
+  { href: "/quickstart", title: "Quick Start" },
   { href: "/about", title: "About" },
+  { href: "/blog", title: "Blog" },
 ];
 
 export const FooterLinks = [
