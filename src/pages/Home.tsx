@@ -32,12 +32,6 @@ export default function Home() {
             </svg>
           </a>
           <a
-            href="#/about"
-            className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-white px-6 py-3 text-sm font-semibold text-neutral-700 hover:bg-neutral-100 transition dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
-          >
-            About
-          </a>
-          <a
             href="https://github.com/veri-md/veri-build"
             target="_blank"
             rel="noopener noreferrer"

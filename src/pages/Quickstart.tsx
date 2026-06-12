@@ -116,8 +116,8 @@ type valid_sorted_list = list[Element] WHERE is_sorted(lst)`}</pre>
         {/* Section: Adding an Element */}
         <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Adding an Element</h4>
         <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-          Insert a new element while preserving the invariant. The ENSURES clause
-          guarantees the result is sorted and has exactly one more element:
+          Insert a new element while preserving the invariant. The return type being <Code>valid_sorted_list</Code>
+          guarantees the result is sorted and we also verify it has exactly one more element
         </p>
 
         <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
@@ -129,8 +129,7 @@ type valid_sorted_list = list[Element] WHERE is_sorted(lst)`}</pre>
     new_elem: Element,
 ) -> valid_sorted_list:
     REQUIRES True
-    ENSURES (is_sorted(result)
-             and len(result) == len(existing) + 1)
+    ENSURES (len(result) == len(existing) + 1)
 
 #TODO`}</pre>
         </div>
