@@ -22,9 +22,8 @@ A `.veri.md` file is a markdown document. Prose describes intent; ` ```veri ` bl
 
 The first Veri DSL block declares the backend and version:
 
-<div class="veri-md"># Sorted List
-
-A verified sorted list targeting Dafny → Rust.
+<div class="veri-md"><div class="veri-title">Sorted List</div>
+<div class="veri-sub">A verified sorted list targeting Dafny → Rust.</div>
 
 <pre class="veri-dsl">TARGET dafny-rust
 VERI_VERSION 0.0.2</pre></div>
@@ -36,9 +35,8 @@ VERI_VERSION 0.0.2</pre></div>
 
 A section header and prose description precede the record definition:
 
-<div class="veri-md">## Element type
-
-Each element has a numeric serial and a string data field.
+<div class="veri-md"><div class="veri-h2">Element type</div>
+<div class="veri-p">Each element has a numeric serial and a string data field.</div>
 
 <pre class="veri-dsl">class Element:
     serial: nat
@@ -50,9 +48,8 @@ This maps to a Dafny `datatype` — a record with two immutable fields.
 
 The predicate defines what sorted means; `WHERE` attaches it to the type:
 
-<div class="veri-md">## Sortedness
-
-A list is sorted if adjacent elements are ordered by serial.
+<div class="veri-md"><div class="veri-h2">Sortedness</div>
+<div class="veri-p">A list is sorted if adjacent elements are ordered by serial.</div>
 
 <pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
@@ -68,9 +65,8 @@ Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, s
 
 Documentation plus the contract and a `#TODO` marker:
 
-<div class="veri-md">## Adding an element
-
-Insert a new element while preserving sorted order.
+<div class="veri-md"><div class="veri-h2">Adding an element</div>
+<div class="veri-p">Insert a new element while preserving sorted order.</div>
 
 <pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
@@ -123,24 +119,25 @@ That's the entire user-facing command. Inside the Docker sandbox, the pipeline g
 
 The complete file — prose and Veri DSL blocks together, exactly as the LLM produces it:
 
-<div class="veri-md"># Sorted List
-
-A verified sorted list targeting Dafny → Rust.
+<div class="veri-md"><div class="veri-title">Sorted List</div>
+<div class="veri-sub">A verified sorted list targeting Dafny → Rust.</div>
 
 <pre class="veri-dsl">TARGET dafny-rust
 VERI_VERSION 0.0.2</pre>
 
-## Element type
+<hr class="veri-sep" />
 
-Each element has a numeric serial and a string data field.
+<div class="veri-h2">Element type</div>
+<div class="veri-p">Each element has a numeric serial and a string data field.</div>
 
 <pre class="veri-dsl">class Element:
     serial: nat
     data: string</pre>
 
-## Sortedness
+<hr class="veri-sep" />
 
-A list is sorted if adjacent elements are ordered by serial.
+<div class="veri-h2">Sortedness</div>
+<div class="veri-p">A list is sorted if adjacent elements are ordered by serial.</div>
 
 <pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
@@ -150,9 +147,10 @@ A list is sorted if adjacent elements are ordered by serial.
 
 type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre>
 
-## Adding an element
+<hr class="veri-sep" />
 
-Insert a new element while preserving sorted order.
+<div class="veri-h2">Adding an element</div>
+<div class="veri-p">Insert a new element while preserving sorted order.</div>
 
 <pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
