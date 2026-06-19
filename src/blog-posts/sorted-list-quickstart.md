@@ -113,20 +113,33 @@ That's the entire user-facing command. Inside the Docker sandbox, the pipeline g
 
 ### The `.veri.md` (as the LLM writes it)
 
-The LLM writes a markdown file with prose surrounding each ` ```veri ` block — the same blocks you saw in the breakdown above, wrapped in natural language descriptions. Here are the Veri DSL blocks together:
+The LLM produces a markdown file with prose and Veri DSL blocks together. This is the complete file:
 
-```veri
+<pre style="background:#f5f5f5;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;overflow-x:auto;font-size:0.8125rem;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#404040;white-space:pre-wrap;">
+# Sorted List
+
+A verified sorted list targeting Dafny → Rust.
+
+<strong style="color:#2563eb;">```veri
 TARGET dafny-rust
 VERI_VERSION 0.0.2
-```
+```</strong>
 
-```veri
+## Element type
+
+Each element has a numeric serial and a string data field.
+
+<strong style="color:#2563eb;">```veri
 class Element:
     serial: nat
     data: string
-```
+```</strong>
 
-```veri
+## Sortedness
+
+A list is sorted if adjacent elements are ordered by serial.
+
+<strong style="color:#2563eb;">```veri
 def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
@@ -134,15 +147,20 @@ def is_sorted(lst: list[Element]) -> bool:
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
 type ValidSortedList = list[Element] WHERE is_sorted(lst)
-```
+```</strong>
 
-```veri
+## Adding an element
+
+Insert a new element while preserving sorted order.
+
+<strong style="color:#2563eb;">```veri
 def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
 #TODO
-```
+```</strong>
+</pre>
 
 ### Resulting Dafny (filled by the agent)
 
