@@ -32,6 +32,15 @@ export default function Home() {
             </svg>
           </a>
           <a
+            href="#/blog"
+            className="inline-flex items-center gap-2 rounded-xl border border-blue-300 bg-blue-50 px-6 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100 transition dark:border-blue-700 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900"
+          >
+            Blog
+            <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </a>
+          <a
             href="https://github.com/veri-md/veri-build"
             target="_blank"
             rel="noopener noreferrer"
@@ -68,6 +77,41 @@ export default function Home() {
             </svg>
           </a>
         </div>
+      </section>
+
+      {/* Latest from the blog */}
+      <section className="py-8">
+        <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-6">
+          Latest from the blog
+        </h2>
+        <a
+          href="#/blog/sorted-list-quickstart"
+          className="flex items-start gap-5 rounded-xl border border-neutral-200 bg-white p-5 transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-blue-500"
+        >
+          <div className="hidden sm:flex size-20 shrink-0 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-700">
+            <img src="/veri.svg" alt="Veri Build" className="size-10" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-semibold text-neutral-900 dark:text-white">
+              Quick Start: Verified Sorted List with Veri DSL
+            </h3>
+            <time className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+              June 19, 2026
+            </time>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-2">
+              Veri DSL is a specification language for formal verification.
+              Write contracts in a Pythonic syntax, compile to verified C or
+              Rust. Walk through the full workflow with a sorted list example
+              targeting Dafny &rarr; Rust.
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+              Read post
+              <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </span>
+          </div>
+        </a>
       </section>
 
       {/* Quick overview cards */}
