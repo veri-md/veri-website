@@ -1,5 +1,3 @@
-# Quick Start: Verified Sorted List with Veri DSL
-
 Veri DSL is a specification language for formal verification. You write contracts in a Pythonic syntax, and the pipeline compiles them to verified code across many backends — for example **C (via F* + KaRaMeL)** or **Rust (via Dafny)**. One spec, multiple targets.
 
 > **You don't write Veri DSL yourself.** The LLM generates all Veri DSL for you — it knows the grammar, the backends, and what each target expects. Your job is to **read** the spec, understand the contracts, and verify they capture the right properties. The Veri DSL is always shown to you as a readable, reviewable artifact, never as something you need to type from scratch.
