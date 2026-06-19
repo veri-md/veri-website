@@ -1,4 +1,4 @@
-import { Code, Pre, SectionTitle, Table } from "../components/Markdown";
+import { Code, SectionTitle, Table } from "../components/Markdown";
 
 export default function Quickstart() {
   return (
@@ -60,11 +60,11 @@ export default function Quickstart() {
       <div className="border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 p-6 md:p-8 my-6 space-y-5">
         {/* Title */}
         <h3 className="text-2xl font-bold text-neutral-900 dark:text-white border-b border-neutral-200 dark:border-neutral-700 pb-3">
-          Sorted List Specification
+          Sorted List
         </h3>
 
         <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          Target: F* &rarr; C via Low*/KaRaMeL
+          A verified sorted list targeting Dafny &rarr; Rust.
         </p>
 
         {/* First code block */}
@@ -72,13 +72,17 @@ export default function Quickstart() {
           <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
             <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
           </div>
-          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">TARGET fstar-c</pre>
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">TARGET dafny-rust
+VERI_VERSION 0.0.2</pre>
         </div>
 
+        {/* Separator */}
+        <hr className="border-neutral-200 dark:border-neutral-700" />
+
         {/* Section: Element Type */}
-        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Element Type</h4>
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Element type</h4>
         <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-          Each element has a numeric serial number and a string data field.
+          Each element has a numeric serial and a string data field.
         </p>
 
         <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
@@ -87,15 +91,18 @@ export default function Quickstart() {
           </div>
           <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`class Element:
     serial: nat
-    data:   string`}</pre>
+    data: string`}</pre>
         </div>
 
+        {/* Separator */}
+        <hr className="border-neutral-200 dark:border-neutral-700" />
+
         {/* Section: Sorted List Type */}
-        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Sorted List Type</h4>
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Sortedness</h4>
         <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-          A sorted list is a list of elements with an invariant that enforces ordering
-          by serial number. The predicate <Code>is_sorted</Code> recursively checks that every
-          adjacent pair is in non-decreasing order:
+          We first design a function that returns true if the list is sorted:
+          A list is sorted if adjacent elements are ordered by serial. Then we
+          enforce that onto the ValidSortedList type.
         </p>
 
         <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
@@ -106,30 +113,29 @@ export default function Quickstart() {
     return match lst:
         case []: True
         case [_]: True
-        case [hd1, hd2, *tl]:
-            hd1.serial <= hd2.serial
-            and is_sorted([hd2] + tl)
+        case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
-type valid_sorted_list = list[Element] WHERE is_sorted(lst)`}</pre>
+type ValidSortedList = list[Element] WHERE is_sorted(lst)`}</pre>
         </div>
 
+        {/* Separator */}
+        <hr className="border-neutral-200 dark:border-neutral-700" />
+
         {/* Section: Adding an Element */}
-        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Adding an Element</h4>
+        <h4 className="text-lg font-semibold text-neutral-900 dark:text-white">Adding an element</h4>
         <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-          Insert a new element while preserving the invariant. The return type being <Code>valid_sorted_list</Code>
-          guarantees the result is sorted and we also verify it has exactly one more element
+          Insert a new element while preserving sorted order. The existing list must be a
+          ValidSortedList, and the return type must be a ValidSortedList (as defined above).
+          The length of the result should be 1 + the existing list.
         </p>
 
         <div className="rounded-lg bg-neutral-100 dark:bg-neutral-900 overflow-x-auto">
           <div className="flex items-center gap-2 px-4 py-1.5 border-b border-neutral-200 dark:border-neutral-700">
             <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Veri DSL</span>
           </div>
-          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`def add_element(
-    existing: valid_sorted_list,
-    new_elem: Element,
-) -> valid_sorted_list:
+          <pre className="p-4 text-sm font-mono text-neutral-800 dark:text-neutral-200 leading-relaxed">{`def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
-    ENSURES (len(result) == len(existing) + 1)
+    ENSURES len(result) == len(existing) + 1
 
 #TODO`}</pre>
         </div>
@@ -141,7 +147,7 @@ type valid_sorted_list = list[Element] WHERE is_sorted(lst)`}</pre>
       <ul className="mt-2 space-y-1 text-sm text-neutral-700 dark:text-neutral-300 list-disc list-inside">
         <li><Code>class Element</Code> &mdash; a record type with two named fields</li>
         <li><Code>is_sorted</Code> &mdash; a recursive predicate using Pythonic <Code>match</Code>/<Code>case</Code> with list destructuring</li>
-        <li><Code>type valid_sorted_list</Code> &mdash; a refined type: <Code>list[Element]</Code> constrained by <Code>WHERE is_sorted(lst)</Code></li>
+        <li><Code>type ValidSortedList</Code> &mdash; a refined type: <Code>list[Element]</Code> constrained by <Code>WHERE is_sorted(lst)</Code></li>
         <li><Code>add_element</Code> &mdash; a function with <Code>REQUIRES</Code>/<Code>ENSURES</Code> contract and <Code>#TODO</Code> marker</li>
         <li>Natural language prose surrounds each Veri DSL block &mdash; the file is documentation <em>and</em> a spec</li>
         <li>All functions and types are <strong>pure</strong> &mdash; no side effects, no mutable state, no I/O inside contracts. The LLM enforces this.</li>

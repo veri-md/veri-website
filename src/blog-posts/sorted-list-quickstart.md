@@ -20,11 +20,16 @@ A `.veri.md` file is a markdown document. Prose describes intent; ` ```veri ` bl
 
 The first Veri DSL block declares the backend and version:
 
-<div class="veri-md"><div class="veri-title">Sorted List</div>
-<div class="veri-sub">A verified sorted list targeting Dafny → Rust.</div>
+<div class="veri-md-preview">
+<h3>Sorted List</h3>
+<p class="veri-sub">A verified sorted list targeting Dafny → Rust.</p>
 
-<pre class="veri-dsl">TARGET dafny-rust
-VERI_VERSION 0.0.2</pre></div>
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>TARGET dafny-rust
+VERI_VERSION 0.0.2</pre>
+</div>
+</div>
 
 `TARGET dafny-rust` routes through the Dafny verifier → Rust compiler.  
 `VERI_VERSION` is checked by the linter — major.minor must match the toolchain.
@@ -33,12 +38,17 @@ VERI_VERSION 0.0.2</pre></div>
 
 A section header and prose description precede the record definition:
 
-<div class="veri-md"><div class="veri-h2">Element type</div>
-<div class="veri-p">Each element has a numeric serial and a string data field.</div>
+<div class="veri-md-preview">
+<h4 class="veri-section-title">Element type</h4>
+<p class="veri-section-desc">Each element has a numeric serial and a string data field.</p>
 
-<pre class="veri-dsl">class Element:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>class Element:
     serial: nat
-    data: string</pre></div>
+    data: string</pre>
+</div>
+</div>
 
 This maps to a Dafny `datatype` — a record with two immutable fields.
 
@@ -46,16 +56,21 @@ This maps to a Dafny `datatype` — a record with two immutable fields.
 
 The predicate defines what sorted means; `WHERE` attaches it to the type:
 
-<div class="veri-md"><div class="veri-h2">Sortedness</div>
-<div class="veri-p">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</div>
+<div class="veri-md-preview">
+<h4 class="veri-section-title">Sortedness</h4>
+<p class="veri-section-desc">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</p>
 
-<pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
         case [_]: True
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
-type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre></div>
+type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre>
+</div>
+</div>
 
 Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, single, and adjacent pairs. `WHERE` attaches the predicate directly to the type, guaranteeing every `ValidSortedList` value is sorted. (Alternately, you can inline the check in `ENSURES` without a named predicate, but `WHERE` keeps the refinement on the type where it belongs.)
 
@@ -63,14 +78,19 @@ Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, s
 
 Documentation plus the contract and a `#TODO` marker:
 
-<div class="veri-md"><div class="veri-h2">Adding an element</div>
-<div class="veri-p">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</div>
+<div class="veri-md-preview">
+<h4 class="veri-section-title">Adding an element</h4>
+<p class="veri-section-desc">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</p>
 
-<pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
-#TODO</pre></div>
+#TODO</pre>
+</div>
+</div>
 
 `REQUIRES` is the precondition (always true here — the function accepts any input).
 
@@ -117,44 +137,58 @@ That's the entire user-facing command. Inside the Docker sandbox, the pipeline g
 
 The complete file — prose and Veri DSL blocks together, exactly as the LLM produces it:
 
-<div class="veri-md"><div class="veri-title">Sorted List</div>
-<div class="veri-sub">A verified sorted list targeting Dafny → Rust.</div>
+<div class="veri-md-preview">
+<h3>Sorted List</h3>
+<p class="veri-sub">A verified sorted list targeting Dafny → Rust.</p>
 
-<pre class="veri-dsl">TARGET dafny-rust
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>TARGET dafny-rust
 VERI_VERSION 0.0.2</pre>
+</div>
 
 <hr class="veri-sep" />
 
-<div class="veri-h2">Element type</div>
-<div class="veri-p">Each element has a numeric serial and a string data field.</div>
+<h4 class="veri-section-title">Element type</h4>
+<p class="veri-section-desc">Each element has a numeric serial and a string data field.</p>
 
-<pre class="veri-dsl">class Element:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>class Element:
     serial: nat
     data: string</pre>
+</div>
 
 <hr class="veri-sep" />
 
-<div class="veri-h2">Sortedness</div>
-<div class="veri-p">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</div>
+<h4 class="veri-section-title">Sortedness</h4>
+<p class="veri-section-desc">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</p>
 
-<pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
         case [_]: True
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
 type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre>
+</div>
 
 <hr class="veri-sep" />
 
-<div class="veri-h2">Adding an element</div>
-<div class="veri-p">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</div>
+<h4 class="veri-section-title">Adding an element</h4>
+<p class="veri-section-desc">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</p>
 
-<pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
+<div class="veri-code-block">
+<div class="code-tab"><span>Veri DSL</span></div>
+<pre>def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
-#TODO</pre></div>
+#TODO</pre>
+</div>
+</div>
 
 ### Resulting Dafny (filled by the agent)
 
