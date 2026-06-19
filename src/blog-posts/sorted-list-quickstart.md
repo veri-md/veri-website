@@ -26,10 +26,8 @@ The first Veri DSL block declares the backend and version:
 
 A verified sorted list targeting Dafny → Rust.
 
-<span class="veri-fence">```veri
-TARGET dafny-rust
-VERI_VERSION 0.0.2
-```</span></div>
+<pre class="veri-dsl">TARGET dafny-rust
+VERI_VERSION 0.0.2</pre></div>
 
 `TARGET dafny-rust` routes through the Dafny verifier → Rust compiler.  
 `VERI_VERSION` is checked by the linter — major.minor must match the toolchain.
@@ -42,11 +40,9 @@ A section header and prose description precede the record definition:
 
 Each element has a numeric serial and a string data field.
 
-<span class="veri-fence">```veri
-class Element:
+<pre class="veri-dsl">class Element:
     serial: nat
-    data: string
-```</span></div>
+    data: string</pre></div>
 
 This maps to a Dafny `datatype` — a record with two immutable fields.
 
@@ -58,15 +54,13 @@ The predicate defines what sorted means; `WHERE` attaches it to the type:
 
 A list is sorted if adjacent elements are ordered by serial.
 
-<span class="veri-fence">```veri
-def is_sorted(lst: list[Element]) -> bool:
+<pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
         case [_]: True
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
-type ValidSortedList = list[Element] WHERE is_sorted(lst)
-```</span></div>
+type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre></div>
 
 Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, single, and adjacent pairs. `WHERE` attaches the predicate directly to the type, guaranteeing every `ValidSortedList` value is sorted. (Alternately, you can inline the check in `ENSURES` without a named predicate, but `WHERE` keeps the refinement on the type where it belongs.)
 
@@ -78,13 +72,11 @@ Documentation plus the contract and a `#TODO` marker:
 
 Insert a new element while preserving sorted order.
 
-<span class="veri-fence">```veri
-def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
+<pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
-#TODO
-```</span></div>
+#TODO</pre></div>
 
 `REQUIRES` is the precondition (always true here — the function accepts any input).
 
@@ -135,46 +127,38 @@ The complete file — prose and Veri DSL blocks together, exactly as the LLM pro
 
 A verified sorted list targeting Dafny → Rust.
 
-<span class="veri-fence">```veri
-TARGET dafny-rust
-VERI_VERSION 0.0.2
-```</span>
+<pre class="veri-dsl">TARGET dafny-rust
+VERI_VERSION 0.0.2</pre>
 
 ## Element type
 
 Each element has a numeric serial and a string data field.
 
-<span class="veri-fence">```veri
-class Element:
+<pre class="veri-dsl">class Element:
     serial: nat
-    data: string
-```</span>
+    data: string</pre>
 
 ## Sortedness
 
 A list is sorted if adjacent elements are ordered by serial.
 
-<span class="veri-fence">```veri
-def is_sorted(lst: list[Element]) -> bool:
+<pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
         case [_]: True
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
-type ValidSortedList = list[Element] WHERE is_sorted(lst)
-```</span>
+type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre>
 
 ## Adding an element
 
 Insert a new element while preserving sorted order.
 
-<span class="veri-fence">```veri
-def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
+<pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
-#TODO
-```</span></div>
+#TODO</pre></div>
 
 ### Resulting Dafny (filled by the agent)
 
