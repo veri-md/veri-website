@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 // Import all blog post markdown files as raw strings
 const postModules = import.meta.glob("/src/blog-posts/*.md", {
@@ -66,7 +67,7 @@ export default function BlogPost() {
         </time>
       </header>
       <div className="prose max-w-none">
-        <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{content}</Markdown>
       </div>
     </article>
   );
