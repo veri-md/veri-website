@@ -16,13 +16,21 @@ A `ValidSortedList` — a list of `Element` records that must always remain sort
 
 ## Step 1: The Spec
 
+A `.veri.md` file is a markdown document. Prose describes intent; ` ```veri ` blocks contain the contracts. Here's what each piece looks like in context.
+
 ### Target Declaration
 
-The first Veri DSL block declares the backend and version:
+The first Veri DSL block declares the backend and version. The LLM opens the file with a title and target description:
+
+```markdown
+# Sorted List
+
+A verified sorted list targeting Dafny → Rust.
 
 ```veri
 TARGET dafny-rust
 VERI_VERSION 0.0.2
+```
 ```
 
 `TARGET dafny-rust` routes through the Dafny verifier → Rust compiler.  
@@ -30,10 +38,18 @@ VERI_VERSION 0.0.2
 
 ### Element Record
 
+The LLM documents the record type with a prose description before the code block:
+
+```markdown
+## Element type
+
+Each element has a numeric serial and a string data field.
+
 ```veri
 class Element:
     serial: nat
     data: string
+```
 ```
 
 This maps to a Dafny `datatype` — a record with two immutable fields.
@@ -41,6 +57,11 @@ This maps to a Dafny `datatype` — a record with two immutable fields.
 ### Sortedness Predicate and Refined Type
 
 First the predicate that defines what sorted means, then the `WHERE` clause that attaches it to the type:
+
+```markdown
+## Sortedness
+
+A list is sorted if adjacent elements are ordered by serial.
 
 ```veri
 def is_sorted(lst: list[Element]) -> bool:
@@ -51,10 +72,18 @@ def is_sorted(lst: list[Element]) -> bool:
 
 type ValidSortedList = list[Element] WHERE is_sorted(lst)
 ```
+```
 
 Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, single, and adjacent pairs. `WHERE` then attaches the predicate directly to the type, guaranteeing every `ValidSortedList` value is sorted. (Alternately, you can inline the check in `ENSURES` without a named predicate, but `WHERE` keeps the refinement on the type where it belongs.)
 
 ### Function Contract
+
+The function contract comes with documentation explaining what it does:
+
+```markdown
+## Adding an element
+
+Insert a new element while preserving sorted order.
 
 ```veri
 def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
@@ -62,6 +91,7 @@ def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList
     ENSURES len(result) == len(existing) + 1
 
 #TODO
+```
 ```
 
 `REQUIRES` is the precondition (always true here — the function accepts any input).
@@ -105,16 +135,33 @@ That's the entire user-facing command. Inside the Docker sandbox, the pipeline g
 
 ## Full Spec and Resulting Code
 
-### The `.veri.md`
+### The `.veri.md` (as the LLM writes it)
+
+````markdown
+# Sorted List
+
+A verified sorted list targeting Dafny → Rust.
 
 ```veri
 TARGET dafny-rust
 VERI_VERSION 0.0.2
+```
 
+## Element type
+
+Each element has a numeric serial and a string data field.
+
+```veri
 class Element:
     serial: nat
     data: string
+```
 
+## Sortedness
+
+A list is sorted if adjacent elements are ordered by serial.
+
+```veri
 def is_sorted(lst: list[Element]) -> bool:
     return match lst:
         case []: True
@@ -122,13 +169,20 @@ def is_sorted(lst: list[Element]) -> bool:
         case [hd1, hd2, *tl]: hd1.serial <= hd2.serial and is_sorted([hd2] + tl)
 
 type ValidSortedList = list[Element] WHERE is_sorted(lst)
+```
 
+## Adding an element
+
+Insert a new element while preserving sorted order.
+
+```veri
 def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
     ENSURES len(result) == len(existing) + 1
 
 #TODO
 ```
+````
 
 ### Resulting Dafny (filled by the agent)
 
@@ -214,7 +268,7 @@ Describe in natural language  →  LLM writes .veri.md  →  Lint  →  Compile 
 
 You never write Veri DSL. You describe what you want, review the contracts the LLM produces, and collect the verified output.
 
-**Next steps:** Describe a more complex software module and let the pipeline produce the spec and verified code.
+**Next steps:** Describe a different data structure (ring buffer, binary search tree, priority queue) and let the pipeline produce the spec and verified code.
 
 ---
 
