@@ -49,7 +49,7 @@ This maps to a Dafny `datatype` — a record with two immutable fields.
 The predicate defines what sorted means; `WHERE` attaches it to the type:
 
 <div class="veri-md"><div class="veri-h2">Sortedness</div>
-<div class="veri-p">A list is sorted if adjacent elements are ordered by serial.</div>
+<div class="veri-p">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</div>
 
 <pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
@@ -66,7 +66,7 @@ Pattern matching on lists with `[hd, *tail]` syntax — three cases for empty, s
 Documentation plus the contract and a `#TODO` marker:
 
 <div class="veri-md"><div class="veri-h2">Adding an element</div>
-<div class="veri-p">Insert a new element while preserving sorted order.</div>
+<div class="veri-p">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</div>
 
 <pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
@@ -137,7 +137,7 @@ VERI_VERSION 0.0.2</pre>
 <hr class="veri-sep" />
 
 <div class="veri-h2">Sortedness</div>
-<div class="veri-p">A list is sorted if adjacent elements are ordered by serial.</div>
+<div class="veri-p">We first design a function that returns true if the list is sorted: A list is sorted if adjacent elements are ordered by serial. Then we enforce that onto the ValidSortedList type.</div>
 
 <pre class="veri-dsl">def is_sorted(lst: list[Element]) -> bool:
     return match lst:
@@ -150,7 +150,7 @@ type ValidSortedList = list[Element] WHERE is_sorted(lst)</pre>
 <hr class="veri-sep" />
 
 <div class="veri-h2">Adding an element</div>
-<div class="veri-p">Insert a new element while preserving sorted order.</div>
+<div class="veri-p">Insert a new element while preserving sorted order. The existing list must be a ValidSortedList, and the return type must be a ValidSortedList (as defined above). The length of the result should be 1 + existing.</div>
 
 <pre class="veri-dsl">def add_element(existing: ValidSortedList, new_elem: Element) -> ValidSortedList:
     REQUIRES True
