@@ -13,7 +13,7 @@ const postModules = import.meta.glob("/src/blog-posts/*.md", {
 const BLOG_POSTS: Record<string, { title: string; date: string; desc: string }> = {
   "sorted-list-quickstart": {
     title: "Quick Start: Verified Sorted List with Veri DSL",
-    date: "2026-06-19",
+    date: "2026-06-17",
     desc: "Write, lint, and compile a formally verified sorted list targeting Dafny → Rust.",
   },
 };
@@ -65,7 +65,7 @@ export default function BlogPost() {
           {meta.date}
         </time>
       </header>
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
+      <div className="prose max-w-none">
         <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
       </div>
     </article>

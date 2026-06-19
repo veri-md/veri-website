@@ -96,7 +96,7 @@ export default function Home() {
               Quick Start: Verified Sorted List with Veri DSL
             </h3>
             <time className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-              June 19, 2026
+              June 17, 2026
             </time>
             <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-2">
               Veri DSL is a specification language for formal verification.

@@ -4,7 +4,7 @@ const POSTS = [
   {
     slug: "sorted-list-quickstart",
     title: "Quick Start: Verified Sorted List with Veri DSL",
-    date: "2026-06-19",
+    date: "2026-06-17",
     desc: "Write, lint, and compile a formally verified sorted list targeting Dafny → Rust.",
   },
 ];
