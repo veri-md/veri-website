@@ -11,10 +11,11 @@ const postModules = import.meta.glob("/src/blog-posts/[!README]*.md", {
   eager: true,
 }) as Record<string, string>;
 
-const BLOG_POSTS: Record<string, { title: string; date: string; desc: string }> = {
+const BLOG_POSTS: Record<string, { title: string; date: string; desc: string; author: string }> = {
   "sorted-list-quickstart": {
     title: "Quick Start: Verified Sorted List with Veri DSL",
     date: "2026-06-17",
+    author: "Dev Bali &amp; Veri MD Team",
     desc: "Write, lint, and compile a formally verified sorted list targeting Dafny → Rust.",
   },
 };
@@ -62,9 +63,11 @@ export default function BlogPost() {
         <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
           {meta.title}
         </h1>
-        <time className="mt-2 block text-sm text-neutral-500 dark:text-neutral-400">
-          {meta.date}
-        </time>
+        <div className="mt-2 flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+          <time>{meta.date}</time>
+          <span>·</span>
+          <span>{meta.author}</span>
+        </div>
       </header>
       <div className="prose max-w-none">
         <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{content}</Markdown>

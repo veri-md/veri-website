@@ -169,6 +169,7 @@ pre code {
 .veri-code-block pre {
   padding: 1rem;
   margin: 0;
+  border: none;
   font-size: 0.8125rem;
   line-height: 1.5;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;

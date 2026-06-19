@@ -5,6 +5,8 @@ const POSTS = [
     slug: "sorted-list-quickstart",
     title: "Quick Start: Verified Sorted List with Veri DSL",
     date: "2026-06-17",
+    author: "Dev Bali \title: "Quick Start: Verified Sorted List with Veri DSL",
+    date: "2026-06-17",amp; Veri MD Team",
     desc: "Write, lint, and compile a formally verified sorted list targeting Dafny → Rust.",
   },
 ];
@@ -31,9 +33,11 @@ export default function Blog() {
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                   {post.title}
                 </h2>
-                <time className="mt-1 block text-sm text-neutral-500 dark:text-neutral-400">
-                  {post.date}
-                </time>
+                <div className="mt-1 flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+                  <time>{post.date}</time>
+                  <span>·</span>
+                  <span>{post.author}</span>
+                </div>
                 <p className="mt-2 text-neutral-600 dark:text-neutral-300">
                   {post.desc}
                 </p>
