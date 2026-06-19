@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
 // Import all blog post markdown files as raw strings
-const postModules = import.meta.glob("/src/blog-posts/*.md", {
+const postModules = import.meta.glob("/src/blog-posts/[!README]*.md", {
   query: "?raw",
   import: "default",
   eager: true,
